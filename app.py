@@ -58,7 +58,7 @@ async def brawlping(interaction: discord.Interaction):
     except Exception as e:
         await interaction.followup.send(f'An error occurred: {e}')
 
-@bot.tree.command(name='lcrandom', description='Get a hyperlink to a random LeetCode problem')
+@bot.tree.command(name='lcrandom', description='Fetch a random LeetCode problem!')
 async def lcrandom(interaction: discord.Interaction):
     try:
         # Acknowledge the interaction
