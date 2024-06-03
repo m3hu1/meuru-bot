@@ -1,12 +1,9 @@
 import discord
-import requests
 import re
 from discord.ext import commands
 from discord.ui import Button
 from discord import app_commands
 import random
-import json
-import asyncio
 import html2text
 import aiohttp
 import subprocess
