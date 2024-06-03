@@ -2,7 +2,6 @@ import discord
 import re
 from discord.ext import commands
 from discord.ui import Button
-from discord import app_commands
 import random
 import html2text
 import aiohttp
@@ -58,31 +57,25 @@ async def brawlping(interaction: discord.Interaction):
 @bot.tree.command(name='lcrandom', description='Fetch a random LeetCode problem!')
 async def lcrandom(interaction: discord.Interaction):
     try:
-        # Acknowledge the interaction
         await interaction.response.defer()
 
         async with aiohttp.ClientSession() as session:
-            # Fetch the total number of questions
             url_total = 'https://alfa-leetcode-api.onrender.com/problems?limit=1'
             async with session.get(url_total) as response_total:
                 data_total = await response_total.json()
             total_questions = data_total['totalQuestions']
 
-            # Fetch the data for all available problems
             url = f'https://alfa-leetcode-api.onrender.com/problems?limit={total_questions}'
             async with session.get(url) as response:
                 data = await response.json()
 
-            # Choose a random problem from the fetched data
             random_problem = random.choice(data['problemsetQuestionList'])
             title_slug = random_problem['titleSlug']
 
-            # Fetch details of the randomly selected problem using /select endpoint
             select_url = f'https://alfa-leetcode-api.onrender.com/select?titleSlug={title_slug}'
             async with session.get(select_url) as select_response:
                 select_data = await select_response.json()
 
-        # Extract problem details
         problem_title = select_data['questionTitle']
         question_number = select_data['questionFrontendId']
         problem_difficulty = select_data['difficulty']
@@ -91,7 +84,6 @@ async def lcrandom(interaction: discord.Interaction):
         markdown_description = html_to_markdown(problem_description)
         problem_link = select_data['link']
         
-        # Construct the embed
         if problem_difficulty == 'Easy':
             color = 0x00B8A3  # Green
         elif problem_difficulty == 'Medium':
@@ -105,16 +97,12 @@ async def lcrandom(interaction: discord.Interaction):
         view = discord.ui.View()
         view.add_item(button)
 
-        # Send the embed with the button
         await interaction.followup.send(embed=embed, view=view)
     except Exception as e:
-        # Handle errors
         await interaction.followup.send(f'Failed to fetch a random LeetCode problem. Error: {e}')
 
 def html_to_markdown(html_text):
-    # Convert HTML to markdown
     markdown_text = html2text.html2text(html_text)
-    # Remove image markdown syntax
     markdown_text = markdown_text.replace("![](", "").replace(")", "")
     return markdown_text
 
