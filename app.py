@@ -63,13 +63,13 @@ async def lcrandom(interaction: discord.Interaction):
 
         async with aiohttp.ClientSession() as session:
             # Fetch the total number of questions
-            url_total = 'http://localhost:3000/problems?limit=1'
+            url_total = 'https://alfa-leetcode-api.onrender.com/problems?limit=1'
             async with session.get(url_total) as response_total:
                 data_total = await response_total.json()
             total_questions = data_total['totalQuestions']
 
             # Fetch the data for all available problems
-            url = f'http://localhost:3000/problems?limit={total_questions}'
+            url = f'https://alfa-leetcode-api.onrender.com/problems?limit={total_questions}'
             async with session.get(url) as response:
                 data = await response.json()
 
@@ -78,7 +78,7 @@ async def lcrandom(interaction: discord.Interaction):
             title_slug = random_problem['titleSlug']
 
             # Fetch details of the randomly selected problem using /select endpoint
-            select_url = f'http://localhost:3000/select?titleSlug={title_slug}'
+            select_url = f'https://alfa-leetcode-api.onrender.com/select?titleSlug={title_slug}'
             async with session.get(select_url) as select_response:
                 select_data = await select_response.json()
 
